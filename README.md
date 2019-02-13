@@ -1,2 +1,2 @@
-# nmp
+# nodejs-mentoring
 NodeJS mentoring program
