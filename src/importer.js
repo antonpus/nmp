@@ -1,8 +1,7 @@
 import {Product} from './exports';
 import * as util from 'util';
 import * as fs from 'fs';
-//import * as csv from 'csv-parser';
-const csv = require('csv-parser');
+import csv from 'csv-parser';
 
 class Importer {
   constructor(eventEmitter) {
