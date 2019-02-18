@@ -2,7 +2,7 @@ import {DirWatcher, Importer} from './exports';
 import * as path from 'path';
 import * as events from 'events';
 
-const getDirPath = () => `${path.dirname(require.main.filename)}/../data`;
+const getDirPath = () => `${__dirname}/../data`;
 
 const main = () => {
   const eventEmitter = new events.EventEmitter();

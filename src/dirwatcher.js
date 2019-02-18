@@ -11,6 +11,7 @@ class DirWatcher {
   watch(dirPath, delay) {
     setInterval(() => {
       readDirAsync(dirPath)
+        .then(fileNames => cleanupWatchedFilesAndGetFileNames.call(this, fileNames))
         .then(fileNames => watchNewFiles.call(this, dirPath, fileNames))
         .catch(err => console.error(`An error happened while trying to read
            ${dirPath}. ${err}`))
@@ -19,6 +20,12 @@ class DirWatcher {
 }
 
 const readDirAsync = util.promisify(fs.readdir);
+
+const cleanupWatchedFilesAndGetFileNames = function cleanupWatchedFiles(fileNames) {
+  this.watchedFiles = this.watchedFiles
+                          .filter(watchedFile => fileNames.includes(watchedFile));
+  return fileNames;
+}
 
 const watchNewFiles = function watchNewFiles(dirPath, fileNames) {
   fileNames
