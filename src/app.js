@@ -1,6 +1,15 @@
-import {User, Product, config} from './exports';
+import {DirWatcher, Importer} from './exports';
+import * as path from 'path';
+import * as events from 'events';
 
-console.log(config.name);
+const getDirPath = () => `${__dirname}/../data`;
 
-new User();
-new Product();
+const main = () => {
+  const eventEmitter = new events.EventEmitter();
+  const dirWatcher = new DirWatcher(eventEmitter);
+  const importer = new Importer(eventEmitter);
+
+  dirWatcher.watch(getDirPath(), 2000);
+}
+
+main();
