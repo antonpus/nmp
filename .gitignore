@@ -63,5 +63,8 @@ typings/
 # Mac OS
 .DS_Store
 
+# WebStorm
+.idea/
+
 # bin
 **/dist
