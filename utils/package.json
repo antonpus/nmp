@@ -1,0 +1,15 @@
+{
+  "name": "utils",
+  "version": "1.0.0",
+  "description": "",
+  "main": "streams.js",
+  "scripts": {},
+  "author": "Anton Pus <anton_pus@epam.com>",
+  "license": "ISC",
+  "bin": {
+    "streams-util": "./streams.js"
+  },
+  "devDependencies": {
+    "csv-parser": "^2.1.0"
+  }
+}
