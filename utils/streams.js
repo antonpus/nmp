@@ -7,13 +7,17 @@ const through2 = require('through2');
 const fs = require('fs');
 const csv = require('csv-parser');
 const split = require('split2');
+const util = require('util');
+const path = require('path');
+const stream = require('stream');
 
 const supportedActions = {
     'reverse': reverse,
     'transform': transform,
     'outputFile': outputFile,
     'convertFromFile': convertFromFile,
-    'convertToFile': convertToFile
+    'convertToFile': convertToFile,
+    'bundleCss': bundleCss
 };
 
 function help() {
@@ -26,6 +30,7 @@ function help() {
     console.log('-a outputFile -f <filePath>');
     console.log('-a convertFromFile -f <filePath>');
     console.log('-a convertToFile -f <filePath>');
+    console.log('-a bundleCss -p <dirPath>');
 }
 
 function transformInput(transformFunc) {
@@ -62,9 +67,9 @@ function toJSON() {
     return through2.obj((data, enc, next) => {
         result.push(data);
         next(null, null);
-    }, function (next) {
+    }, function (end) {
         this.push(JSON.stringify(result));
-        next();
+        end();
     });
 }
 
@@ -112,10 +117,55 @@ function convertToFile(filePath) {
 
 }
 
+function bundleCss(dirPath) {
+    if (!dirPath) {
+        printUsageError();
+        return;
+    }
+
+    if (!fs.existsSync(dirPath)) {
+        console.log(`No dir exists ${dirPath}`);
+        return;
+    }
+
+    const cssStream = stream.Readable();
+    cssStream._read = function () {
+    }
+
+    const filterCssFiles = fileNames => fileNames.filter(name => path.extname(name) === '.css');
+    const filterBundleCss = fileNames => fileNames.filter(name => name !== 'bundle.css' && name !== 'default.css');
+    const addDefaultCss = fileNames => {
+        fileNames.push('default.css');
+        return fileNames;
+    }
+
+
+    const getFileContentAndPushIntoStream = fileName => fs.createReadStream(path.join(dirPath, fileName))
+        .on('data', data => cssStream.push(data));
+
+    const pushFilesToStream = fileNames => fileNames.forEach(name => getFileContentAndPushIntoStream(name));
+
+    const readdirAsync = util.promisify(fs.readdir);
+    const readCssDir = () => readdirAsync(dirPath)
+        .then(filterBundleCss)
+        .then(filterCssFiles)
+        .then(addDefaultCss)
+        .then(pushFilesToStream);
+
+    const transformCss = () => through2((data, enc, next) => next(null, Buffer.from(`${data}\n`)));
+    const toBundleCss = () => fs.createWriteStream(path.join(dirPath, 'bundle.css'));
+
+    cssStream
+        .pipe(transformCss())
+        .pipe(toBundleCss());
+
+    readCssDir();
+}
+
 function performAction(program, args) {
     const action = supportedActions[program.action];
     if (action) {
-        action(program.file);
+        action(program.file ? program.file : program.path);
     } else {
         printUsageError();
     }
@@ -143,6 +193,7 @@ function parseProgram() {
     return program
         .option('-a, --action <required>', 'An action to be performed')
         .option('-f, --file [optional]', 'A file required for particular action')
+        .option('-p, --path [optional]', 'A directory path required for particular action')
         .option('-h, --help', 'usage manual')
         .parse(process.argv);
 }
