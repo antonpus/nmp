@@ -1,10 +1,10 @@
 {
   "name": "nodejs-mentoring",
   "version": "1.0.0",
-  "main": "app/app.js",
+  "main": "app/index.js",
   "scripts": {
     "build": "babel app -d dist",
-    "start": "npm run build && nodemon dist/app.js"
+    "start": "npm run build && nodemon dist/index.js"
   },
   "keywords": [],
   "author": "Anton Pus <anton_pus@epam.com>",
@@ -16,7 +16,9 @@
     "@babel/preset-env": "^7.3.1",
     "@babel/preset-stage-2": "^7.0.0",
     "@babel/register": "^7.0.0",
+    "cookie-parser": "^1.4.4",
     "csv-parser": "^2.1.0",
+    "express": "^4.16.4",
     "nodemon": "^1.18.10"
   }
 }
