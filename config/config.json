@@ -1,3 +1,6 @@
 {
-  "name": "Node.js Homework Application"
+  "name": "Node.js Homework Application",
+  "auth": {
+    "secret": "qwertyuiopasdfghjklzxcvbnm123456"
+  }
 }

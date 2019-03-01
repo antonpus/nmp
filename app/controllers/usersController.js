@@ -1,12 +1,12 @@
-import User from '../models/user'
+import UsersRepository from '../repositories/usersRepository'
 
 class UsersController {
     constructor() {
-        this.users = [new User('Alex'), new User('Ben')];
+        this.repository = new UsersRepository();
     }
 
     getAll(req, res) {
-        return res.status(200).send(this.users);
+        return res.status(200).send(this.repository.findAll());
     }
 }
 
