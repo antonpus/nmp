@@ -6,9 +6,9 @@ const sign = user => jwt.sign({sub: user.email}, config.auth.secret);
 const verify = (token, done, failed) => jwt.verify(token, config.auth.secret, err => {
     if (err) {
         failed();
-    } else {
-        done();
+        return;
     }
+    done();
 });
 
 export default {sign, verify};

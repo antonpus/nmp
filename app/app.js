@@ -1,8 +1,10 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
+
 import customCookieParser from './middlewares/customCookieParser';
 import customQueryParser from './middlewares/customQueryParser';
 import authChecker from './middlewares/authChecker';
+
 import apiRouter from './routes/api';
 import authRouter from './routes/auth';
 

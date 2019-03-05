@@ -15,4 +15,6 @@ class UsersRepository {
     }
 }
 
-export default UsersRepository;
+const usersRepository = new UsersRepository();
+
+export default usersRepository;

@@ -22,4 +22,6 @@ class ProductsRepository {
     }
 }
 
-export default ProductsRepository;
+const productsRepository = new ProductsRepository();
+
+export default productsRepository;

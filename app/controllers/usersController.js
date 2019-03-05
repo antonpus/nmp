@@ -1,13 +1,14 @@
-import UsersRepository from '../repositories/usersRepository'
+import usersRepository from '../repositories/usersRepository'
 
 class UsersController {
     constructor() {
-        this.repository = new UsersRepository();
     }
 
     getAll(req, res) {
-        return res.status(200).send(this.repository.findAll());
+        return res.status(200).send(usersRepository.findAll());
     }
 }
 
-export default UsersController;
+const usersController = new UsersController();
+
+export default usersController;

@@ -1,8 +1,7 @@
-import ProductsRepository from '../repositories/productsRepository'
+import productsRepository from '../repositories/productsRepository'
 
 class ProductsController {
     constructor() {
-        this.repository = new ProductsRepository();
     }
 
     create(req, res) {
@@ -12,17 +11,17 @@ class ProductsController {
                 'message': 'invalid request'
             });
         }
-        const newProduct = this.repository.create(req.body);
+        const newProduct = productsRepository.create(req.body);
         return res.status(201).send(newProduct);
     }
 
     getAll(req, res) {
-        const products = this.repository.findAll();
+        const products = productsRepository.findAll();
         return res.status(200).send(products);
     }
 
     getOne(req, res) {
-        const product = this.repository.find(req.params.id);
+        const product = productsRepository.find(req.params.id);
         if (!product) {
             return res.status(404).send({
                 'message': 'product not found'
@@ -32,7 +31,7 @@ class ProductsController {
     }
 
     getReviews(req, res) {
-        const product = this.repository.find(req.params.id);
+        const product = productsRepository.find(req.params.id);
         if (!product) {
             return res.status(404).send({
                 'message': 'product not found'
@@ -42,6 +41,8 @@ class ProductsController {
     }
 }
 
-const isProductDataValid = (data) => data && data.id && data.name;
+const isProductDataValid = data => data && data.id && data.name;
 
-export default ProductsController;
+const productsController = new ProductsController();
+
+export default productsController;

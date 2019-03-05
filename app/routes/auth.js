@@ -1,9 +1,10 @@
 import express from 'express';
-import AuthController from '../controllers/authController';
+import authController from '../controllers/authController';
+import passport from '../middlewares/passport';
 
 const authRouter = express.Router();
-const authController = new AuthController();
 
-authRouter.post('/', (req, res) => authController.auth(req, res));
+authRouter.post('/v1', (req, res) => authController.auth(req, res));
+authRouter.post('/v2', (req, res, next) => passport.auth(req, res, next));
 
 export default authRouter;
