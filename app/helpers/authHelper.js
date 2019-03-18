@@ -1,23 +1,22 @@
 import jwtHelper from './jwtHelper';
-import usersRepository from '../repositories/usersRepository';
+import {User} from '../../db/models';
 
 const authenticateAsync = (login, password) => {
-    return new Promise((resolve, reject) => {
-        if (!login || !password) {
-            reject('Missing login or password');
-        }
-        const user = usersRepository.findByEmail(login);
-        if (!user) {
-            reject('Invalid login');
-        }
-        if (!isPasswordValid(password, user)) {
-            reject('Invalid password');
-        }
-        resolve(user);
-    });
+    return new Promise((resolve, reject) => checkMissingCredentials(login, password)
+        .then(login => User.findOne({where: {email: login}}))
+        .then(validateUserExists)
+        .then(user => validatePassword(password, user))
+        .then(resolve)
+        .catch(reject));
 };
 
-const isPasswordValid = (password, user) => user.password === password;
+const checkMissingCredentials = (login, password) => new Promise(
+    (resolve, reject) => (!login || !password) ? reject('Missing login or password') : resolve(login));
+
+const validateUserExists = user => new Promise((resolve, reject) => !user ? reject('Invalid login') : resolve(user));
+
+const validatePassword = (password, user) => new Promise(
+    (resolve, reject) => !(user.password === password) ? reject('Invalid password') : resolve(user));
 
 const toSuccessfulAuthResponse = user => {
     return {

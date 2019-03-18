@@ -1,4 +1,4 @@
-import productsRepository from '../repositories/productsRepository'
+import {Product, Review} from '../../db/models'
 
 class ProductsController {
     constructor() {
@@ -11,37 +11,61 @@ class ProductsController {
                 'message': 'invalid request'
             });
         }
-        const newProduct = productsRepository.create(req.body);
-        return res.status(201).send(newProduct);
+
+        const reviewPromises = data.reviews
+            .map(review => Review.create(review));
+
+        return Product.create(data)
+            .then(product => Promise.all(reviewPromises)
+                .then(reviews => product.setReviews(reviews))
+                .then(() => product)
+                .catch(err => throw new Error(err)))
+            .then(product => res.status(201).send(product))
+            .catch(err => res.status(400).send(err));
     }
 
     getAll(req, res) {
-        const products = productsRepository.findAll();
-        return res.status(200).send(products);
+        return Product.findAll({
+            include: [{
+                model: Review,
+                as: 'reviews',
+            }],
+        })
+            .then(products => res.status(200).send(products))
+            .catch(error => res.status(400).send(error));
     }
 
     getOne(req, res) {
-        const product = productsRepository.find(req.params.id);
-        if (!product) {
-            return res.status(404).send({
-                'message': 'product not found'
-            });
-        }
-        return res.status(200).send(product);
+        return Product.findByPk(req.params.id)
+            .then(rejectOnMissingProduct)
+            .then(product => res.status(200).send(product),
+                () => res.status(404).send({'message': 'product not found'}))
+            .catch(error => res.status(400).send(error));
     }
 
     getReviews(req, res) {
-        const product = productsRepository.find(req.params.id);
-        if (!product) {
-            return res.status(404).send({
-                'message': 'product not found'
-            });
-        }
-        return res.status(200).send(product.reviews);
+        return Product.findByPk(req.params.id, {
+            include: [{
+                model: Review,
+                as: 'reviews',
+            }],
+        })
+            .then(rejectOnMissingProduct)
+            .then(product => res.status(200).send(product.reviews),
+                () => res.status(404).send({'message': 'product not found'}))
+            .catch(error => res.status(400).send(error));
     }
 }
 
-const isProductDataValid = data => data && data.id && data.name;
+const isProductDataValid = data => data && data.name;
+
+const rejectOnMissingProduct = product => new Promise((resolve, reject) => {
+    if (!product) {
+        reject();
+        return;
+    }
+    resolve(product);
+});
 
 const productsController = new ProductsController();
 
