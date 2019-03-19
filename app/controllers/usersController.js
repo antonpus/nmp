@@ -1,4 +1,4 @@
-import {User} from '../../db/models'
+import {User} from '../../db/postgres/models'
 
 class UsersController {
     constructor() {

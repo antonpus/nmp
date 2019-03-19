@@ -1,5 +1,5 @@
 import jwtHelper from './jwtHelper';
-import {User} from '../../db/models';
+import {User} from '../../db/postgres/models';
 
 const authenticateAsync = (login, password) => {
     return new Promise((resolve, reject) => checkMissingCredentials(login, password)
