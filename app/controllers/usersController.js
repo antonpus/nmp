@@ -1,13 +1,22 @@
-import User from '../models/user'
+import {User} from '../../db/models'
 
 class UsersController {
     constructor() {
-        this.users = [new User('Alex'), new User('Ben')];
+    }
+
+    create(req, res) {
+        return User.create(req.body)
+            .then(user => res.status(201).send(user))
+            .catch(error => res.status(400).send(error));
     }
 
     getAll(req, res) {
-        return res.status(200).send(this.users);
+        return User.findAll()
+            .then(users => res.status(200).send(users))
+            .catch(error => res.status(400).send(error));
     }
 }
 
-export default UsersController;
+const usersController = new UsersController();
+
+export default usersController;

@@ -7,7 +7,7 @@ class ProductsRepository {
     }
 
     create(data) {
-        const reviews = data.reviews ? data.reviews.map(r => new Review(r.rate, r.comment)) : [];
+        const reviews = data.reviews ? data.reviews.map(({rate, comment}) => new Review(rate, comment)) : [];
         const product = new Product(data.id, data.name, reviews);
         this.products.push(product);
         return product;
@@ -22,4 +22,6 @@ class ProductsRepository {
     }
 }
 
-export default ProductsRepository;
+const productsRepository = new ProductsRepository();
+
+export default productsRepository;
