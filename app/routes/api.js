@@ -4,10 +4,12 @@ import usersController from '../controllers/usersController';
 
 const apiRouter = express.Router();
 
-apiRouter.post('/products', (req, res) => productsController.create(req, res));
-apiRouter.get('/products', (req, res) => productsController.getAll(req, res));
-apiRouter.get('/products/:id', (req, res) => productsController.getOne(req, res));
-apiRouter.get('/products/:id/reviews', (req, res) => productsController.getReviews(req, res));
-apiRouter.get('/users', (req, res) => usersController.getAll(req, res));
+apiRouter.post('/products', productsController.create);
+apiRouter.get('/products', productsController.getAll);
+apiRouter.get('/products/:id', productsController.getOne);
+apiRouter.get('/products/:id/reviews', productsController.getReviews);
+
+apiRouter.post('/users', usersController.create);
+apiRouter.get('/users', usersController.getAll);
 
 export default apiRouter;
