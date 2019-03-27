@@ -2,5 +2,9 @@
   "name": "Node.js Homework Application",
   "auth": {
     "secret": "qwertyuiopasdfghjklzxcvbnm123456"
+  },
+  "mongodb": {
+    "url": "mongodb://nodejs:nodejs@localhost:27017",
+    "db": "nodejs_db"
   }
 }

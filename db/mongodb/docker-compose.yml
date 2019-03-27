@@ -1,0 +1,9 @@
+mongo:
+  image: mongo
+  restart: always
+  ports:
+    - 27017:27017
+  environment:
+    MONGO_INITDB_ROOT_USERNAME: nodejs
+    MONGO_INITDB_ROOT_PASSWORD: nodejs
+    MONGO_INITDB_DATABASE: nodejs_db

@@ -1,4 +1,4 @@
-import {Product, Review} from '../../db/models'
+import {Product, Review} from '../../db/postgres/models'
 
 class ProductsController {
     constructor() {
